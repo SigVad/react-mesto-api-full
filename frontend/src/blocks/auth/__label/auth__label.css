@@ -1,0 +1,6 @@
+.auth__label {
+    margin: 0px;
+}
+.auth__label:last-of-type {
+    margin: 0 0 143px;
+}

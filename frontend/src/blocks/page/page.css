@@ -1,0 +1,26 @@
+.page {
+    padding: 45px 0 55px;
+    max-width: 880px;
+    width: calc(100% - 19px*2);
+    box-sizing: border-box;
+    background-color: #000;
+    font-family: 'Inter', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+  
+@media screen and (max-width: 559px) {
+  .page {
+    padding: 28px 0 36px;
+    width: 100%;
+    min-width: 320px;
+  }
+}

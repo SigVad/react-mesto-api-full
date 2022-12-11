@@ -1,0 +1,16 @@
+.profile__info {
+  margin-left: 30px;
+  margin-right: auto;
+  max-width: 336px;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+@media screen and (max-width: 699px) {
+  .profile__info {
+    max-width: none;
+    width: 100%;
+    margin: 26px auto 33px;
+  }
+}

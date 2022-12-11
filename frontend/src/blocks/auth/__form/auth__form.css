@@ -1,0 +1,11 @@
+@media screen and (max-width: 559px) {
+  .auth__form {
+    margin-top: 50px;
+  }
+}
+
+@media screen and (max-width: 559px) {
+  .auth__form {
+    margin-top: 40px;
+  }  
+}

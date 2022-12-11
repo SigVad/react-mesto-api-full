@@ -1,0 +1,11 @@
+.popup__label {
+  margin: 0;
+  box-sizing: border-box;
+  padding: 0;
+  list-style: none;
+  max-width: 358px;
+}
+
+.popup__label:last-of-type {
+  margin-bottom: 16px;
+}
