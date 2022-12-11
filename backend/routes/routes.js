@@ -7,7 +7,7 @@ const { urlRegExp } = require('../utils/constants');
 const auth = require('../middlewares/auth');
 const NotFoundErr = require('../errors/NotFoundErr');
 const defaultError = require('../middlewares/defaultError');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { requestLogger, errorLogger } = require('../middlewares/logger');
 
 router.use(requestLogger); // подключаем логгер запросов
 router.post(
@@ -39,7 +39,7 @@ router.use('*', (req, res, next) => {
   next(new NotFoundErr('Страница не найдена'));
 });
 
-app.use(errorLogger); // подключаем логгер ошибок
+router.use(errorLogger); // подключаем логгер ошибок
 router.use(errors()); // обработчик ошибок celebrate
 router.use(defaultError); // обработать ошибку сервера
 
