@@ -41,10 +41,24 @@ function App(props) {
   const [popupSuccess, setPopupSuccess] = useState(false);
 
   useEffect(() => {
+    api.getUserInfo()
+      .then(() => {
+        props.history.push('/');
+        setLoggedIn(true);
+      })
+      .catch(() => {
+        props.history.push('/sign-in');
+        setLoggedIn(false);
+      });
+  }, [props.history]);
+  
+  useEffect(() => {
     if (loggedIn) 
     {
       api.getUserInfo()
       .then((res) => {
+        props.history.push('/');
+        setLoggedIn(true);
         setCurrentUser(res)
       })
       .catch(err => {
@@ -191,20 +205,13 @@ function App(props) {
   function handleLogin(data) {
     authApi.authorization(data)
     .then((res) => {
-      console.log('')
-      if (true) {
         setLoggedIn(true);
         setPageData({
           'email': data.email,
         });
-        setLoggedIn(true)
         props.history.push('/');
-      } else {
-        return;
-      }
     })
     .catch((err) => {
-      handleInfoTooltipOpen(true, textAuthStatusSuccess);
       switch (err) {
         case 400:
           textError = `Не передано одно из полей ввода.`;
@@ -220,12 +227,12 @@ function App(props) {
     })
   }
 
-  function logout() {
-    authApi.logOut()
-      .then((res) => {
-        setLoggedIn(false);
-        setPageData(null);
+  function signout() {
+    authApi.signOut()
+      .then(() => {
         props.history.push('/sign-in');
+        //setLoggedIn(false);
+        //setPageData(null);
     })
     .catch((err) => console.log(err));
   }
@@ -258,7 +265,7 @@ function App(props) {
           //
           headerLinkName='Выйти'
           headerLinkUrl='/sign-in'
-          onClick={logout}
+          onClick={signout}
           email={pageData.email}
         />
         <Route path="/sign-in">

@@ -34,7 +34,6 @@ class AuthApi {
     .then(this._checkAnswer)
   }
 
-
   getContent() {//запроc для получения email
     console.log(`getContent (запроc для получения email)`);
     return fetch(`${this._baseUrl}/users/me`, {
@@ -45,13 +44,14 @@ class AuthApi {
     .then(this._checkAnswer)
   }
 
-  logOut() { //выйти
-    return fetch(`${this._baseURL}/logout`, {
+  signOut() { //выйти
+    console.log(`signOut (запроc для выхода)`);
+    return fetch(`${this._baseUrl}/signout`, {
       method: 'POST',
       headers: this._headers,
-      credentials: this._credentials,
+			credentials: this._credentials,
     })
-      .then(this._checkResponseStatus)
+      .then(this._checkAnswer)
   }
 
 }
