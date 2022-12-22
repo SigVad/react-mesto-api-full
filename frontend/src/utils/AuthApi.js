@@ -35,24 +35,20 @@ class AuthApi {
   }
 
 
-  validationCookie() {//запроc для проверки валидности кука и получения email
-    console.log(`validationCookie (запроc проверки кука)`);
+  getContent() {//запроc для получения email
+    console.log(`getContent (запроc для получения email)`);
     return fetch(`${this._baseUrl}/users/me`, {
 			method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: this._headers,
 			credentials: this._credentials,
     })
     .then(this._checkAnswer)
   }
 
-  logOut() { //логи
+  logOut() { //выйти
     return fetch(`${this._baseURL}/logout`, {
       method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: this._headers,
       credentials: this._credentials,
     })
       .then(this._checkResponseStatus)
@@ -61,9 +57,10 @@ class AuthApi {
 }
 
 export const authApi = new AuthApi({
+  //baseUrl: "http://127.0.0.1:3000",
   baseUrl: 'https://api.sigvad.students.nomoredomains.club',
   headers: {
-    'Content-Type': 'application/json'
+    "Content-Type": "application/json",
   },
 	credentials: 'include',
 });

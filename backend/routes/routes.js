@@ -4,7 +4,7 @@ const usersRouter = require('./users');
 const cardsRouter = require('./cards');
 const { login, createUser } = require('../controllers/users');
 const { urlRegExp } = require('../utils/constants');
-const auth = require('../middlewares/auth');
+const { auth } = require('../middlewares/auth');
 const NotFoundErr = require('../errors/NotFoundErr');
 const defaultError = require('../middlewares/defaultError');
 const { requestLogger, errorLogger } = require('../middlewares/logger');
@@ -34,6 +34,10 @@ router.post('/signin', celebrate({
 router.use(auth); // защита авторизацией
 router.use('/', usersRouter);
 router.use('/', cardsRouter);
+
+router.get('/logout', (req, res) => {
+  res.clearCookie('access_token').send({ message: 'Выход' });
+});
 
 router.use('*', (req, res, next) => {
   next(new NotFoundErr('Страница не найдена'));

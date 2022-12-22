@@ -1,9 +1,10 @@
 //В классе описаны запросы к серверу
 
 class Api {
-  constructor({ baseUrl, headers }) {
+  constructor({ baseUrl, headers, credentials}) {
     this._baseUrl = baseUrl;
     this._headers = headers;
+    this._credentials = credentials;
   }
   
   _checkAnswer = (res) => {//проверить ответ
@@ -18,6 +19,7 @@ class Api {
     console.log(`getInitialCards (запроcить список карт)`);
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
+      credentials: this._credentials,
     })
       .then(this._checkAnswer);
   }
@@ -26,6 +28,7 @@ class Api {
     console.log(`getUserInfo (запроcить инф. пользователя)`);
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
+      credentials: this._credentials,
     })
     .then(this._checkAnswer);
   }
@@ -35,6 +38,7 @@ class Api {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         avatar: link,
       }),
@@ -47,6 +51,7 @@ class Api {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",//частичное обновление ресурса
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify({
         name: user.name,
         about: user.about
@@ -60,6 +65,7 @@ class Api {
     return fetch(`${this._baseUrl}/cards`, {
       method: "POST",
       headers: this._headers,
+      credentials: this._credentials,
       body: JSON.stringify(value),
     })
       .then(this._checkAnswer);
@@ -67,18 +73,20 @@ class Api {
 
   likeCard(cardId) {//отправить лайк
     console.log(`likeCard (отправить лайк)`);
-    return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",//заменить ресурс полностью
       headers: this._headers,
+      credentials: this._credentials,
     })
       .then(this._checkAnswer);
   }
 
   dislikeCard(cardId) {//удаление лайка
     console.log(`dislikeCard (удаление лайка)`);
-    return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
+      credentials: this._credentials,
     })
       .then(this._checkAnswer);
   }
@@ -88,6 +96,7 @@ class Api {
     return fetch(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
+      credentials: this._credentials,
     })
       .then(this._checkAnswer);
   }
@@ -96,9 +105,10 @@ class Api {
 //создадим api и передадим ему юрл сервера и код авторизации
 export const api = new Api({
   baseUrl: "https://api.sigvad.students.nomoredomains.club",
+  //baseUrl: "http://127.0.0.1:3000",
   headers: {
-    authorization: "f6d44b42-c81d-4168-83e7-55a4e60ba01f",
+    //authorization: "f6d44b42-c81d-4168-83e7-55a4e60ba01f",
     "Content-Type": "application/json",
   },
-	credentials:'include',
+  credentials:'include',
 });

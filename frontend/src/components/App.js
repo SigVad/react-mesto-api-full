@@ -6,16 +6,17 @@ import EditProfilePopup from './EditProfilePopup';
 import AddPlacePopup from './AddPlacePopup';
 import ImagePopup from './ImagePopup';
 //import PopupWithForm from "./PopupWithForm";
-import {CurrentUserContext} from '../contexts/CurrentUserContext';
+import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/Api';
 import { authApi } from "../utils/AuthApi";
-import { Route, Switch, withRouter, useHistory  } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from './InfoTooltip';
 
 function App(props) {
+  
   const textAuthStatusSuccess = 'Вы успешно \nзарегистрировались!';
   const textAuthStatusErrorDefault = `Что-то пошло не так! \nПопробуйте ещё раз.`;
   let textError = '';
@@ -27,69 +28,42 @@ function App(props) {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-	const history = useHistory();
   
-  const [pageData, setPageData] = useState({}); //email для хедера
-  const [loggedIn, setLoggedIn] = useState(false); //статус авторизации 
-  const [isInfoStatusText, setIsInfoStatusText] = useState(''); //текст попапа статуса
-  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false); //открыть попап статуса
-  const [popupSuccess, setPopupSuccess] = useState(false); //значение попапа статуса
+  //email для хедера
+  const [pageData, setPageData] = useState({});
+  //статус авторизации
+  const [loggedIn, setLoggedIn] = useState(false);
+  //текст попапа статуса 
+  const [isInfoStatusText, setIsInfoStatusText] = useState('');
+  //открыть попап статуса
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  //значение попапа статуса
+  const [popupSuccess, setPopupSuccess] = useState(false);
 
-  // useEffect(() => {
-  //   checkToken();
-  // }, []);
+  useEffect(() => {
+    if (loggedIn) 
+    {
+      api.getUserInfo()
+      .then((res) => {
+        setCurrentUser(res)
+      })
+      .catch(err => {
+        const textError = `Не удалось получить данные пользователя.`;
+        console.log(`${textError} Ошибка ${err}`);
+        handleInfoTooltipOpen(false, textError);
+      });
 
-	useEffect(() => {
-		authApi.validationCookie()
-			.then((data) => {
-				setLoggedIn(true);
-				setPageData({
-					'email': data.email,
-				});
-				history.push('/');
-			})
-			.catch((err) => {
-				history.push("/sign-in");
-				console.log(err);
-			});
-	}, [history])
-
-	useEffect(() => {
-		// setLoading(true);
-		Promise.all([authApi.getUser(), authApi.getCards()])
-			.then((res) => {
-				setCurrentUser(res);
-				setCards(res);
-			})
-			.catch((err) => { console.log(err) })
-		// .finally(() => setLoading(false))
-
-	}, [loggedIn, history]);
-
-  // useEffect(() => {
-  //   if (loggedIn) 
-  //   {
-  //     api.getUserInfo()
-  //     .then((res) => {
-  //       setCurrentUser(res)
-  //     })
-  //     .catch(err => {
-  //       textError = `Не удалось получить данные пользователя.`;
-  //       console.log(`${textError} Ошибка ${err}`);
-  //       handleInfoTooltipOpen(false, textError);
-  //     });
-
-  //     api.getInitialCards()
-  //       .then((res) => {
-  //         setCards(res);
-  //       })
-  //       .catch(err => {
-  //         textError = `Не удалось получить карточки.`;
-  //         console.log(`${textError} Ошибка ${err}`);
-  //         handleInfoTooltipOpen(false, textError);
-  //       });
-  //   }
-  // },[loggedIn]);
+      api.getInitialCards()
+        .then((res) => {
+          setCards(res);
+        })
+        .catch(err => {
+          const textError = `Не удалось получить карточки.`;
+          console.log(`${textError} Ошибка ${err}`);
+          handleInfoTooltipOpen(false, textError);
+        });
+    }
+  },[loggedIn]);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -147,8 +121,9 @@ function App(props) {
   }
 
   function handleCardLike(card) {
+    // проверяем, есть ли лайк на этой карточке
     const isLiked = card.likes.some((item) => {
-      return item._id === currentUser._id;
+      return item === currentUser._id;
     })
     if (isLiked) {
       api.dislikeCard(card._id)
@@ -194,8 +169,6 @@ function App(props) {
     setIsCardDeletePopupOpen(false);
   }
 
-  //новое
-
   function handleRegister(data) {
     authApi.registration(data)
     .then((res) => {
@@ -218,8 +191,8 @@ function App(props) {
   function handleLogin(data) {
     authApi.authorization(data)
     .then((res) => {
-      if (res.token) {
-        localStorage.setItem('token', res.token);
+      console.log('')
+      if (true) {
         setLoggedIn(true);
         setPageData({
           'email': data.email,
@@ -247,43 +220,18 @@ function App(props) {
     })
   }
 
-  // function checkToken() {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     authApi.validationCookie()
-  //     .then((data) => {
-  //       if (data) {
-  //         const userData = {
-  //           'emai': data.data.email,
-  //         }
-  //         setPageData(userData);
-  //         setLoggedIn(true)
-  //         props.history.push('/')
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       switch (err) {
-  //         case 400:
-  //           textError = `Токен не передан или передан не в том формате.`;
-  //           break;
-  //         case 401:
-  //           textError = `Переданный токен некорректен.`;
-  //           break;
-  //         default:
-  //           textError = textAuthStatusErrorDefault;
-  //       };
-  //       console.log(`${textError} Ошибка ${err}`);
-  //       handleInfoTooltipOpen(false, textError);
-  //     })
-  //   }
-  // }
-
   function logout() {
-    localStorage.setItem('token', '');
-    setLoggedIn(false);
+    authApi.logOut()
+      .then((res) => {
+        setLoggedIn(false);
+        setPageData(null);
+        props.history.push('/sign-in');
+    })
+    .catch((err) => console.log(err));
   }
 
   function handleInfoTooltipOpen(result, text) {
+    closeAllPopups();
     setPopupSuccess(result);
     setIsInfoStatusText(text);
     setIsInfoTooltipOpen(true);

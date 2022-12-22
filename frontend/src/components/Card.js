@@ -6,13 +6,13 @@ function Card({card, onCardClick, onCardDelete, onCardLike}) {
   
   const currentUser = useContext(CurrentUserContext);
   // являемся ли мы владельцем текущей карточки
-  const isOwn = card.owner._id === currentUser._id;
+  const isOwn = card.owner === currentUser._id;
   const elementTrashButtonClassName = (
     `element__trash-button ${isOwn ? '' : 'element__trash-button_hidden'}`
   ); 
 
   // есть ли у карточки лайк юзера
-  const isLiked = card.likes.some(i => i._id === currentUser._id);
+  const isLiked = card.likes.some(i => i === currentUser._id);
   const elementLikeButtonClassName = (
     `element__like-button ${isLiked ? 'element__like-button_active' : ''}`
   ); ; 
