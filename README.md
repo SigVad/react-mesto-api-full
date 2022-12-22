@@ -7,4 +7,4 @@
 * Frontend https://sigvad.students.nomoredomains.club
 * Backend https://api.sigvad.students.nomoredomains.club
 
-ссылка на репозиторий
+ссылка на репозиторий https://github.com/SigVad/react-mesto-api-full
